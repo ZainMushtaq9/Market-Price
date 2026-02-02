@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Market Prices - Find Best Rates</title>
+    <meta name="description" content="Compare market prices across different cities and mandis in Pakistan. Find the cheapest and best rates for commodities.">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        h1 { color: #667eea; margin-bottom: 20px; }
+        select, button {
+            padding: 12px 20px;
+            margin: 10px 5px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover { background: #764ba2; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        .cheapest { background: #d4edda; font-weight: bold; }
+        .expensive { background: #f8d7da; }
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back</a>
+        
+        <div class="card">
+            <h1>🔍 Compare Prices</h1>
+            <p>Select a commodity to compare prices across cities</p>
+            
+            <div>
+                <select id="commoditySelect">
+                    <option value="">Select Commodity...</option>
+                </select>
+                <button onclick="comparePrices()">Compare</button>
+            </div>
+            
+            <table id="comparisonTable" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>City</th>
+                        <th>Price (per 40kg)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        async function loadCommodities() {
+            const response = await fetch('/api/commodities');
+            const data = await response.json();
+            const select = document.getElementById('commoditySelect');
+            data.commodities.forEach(c => {
+                select.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+        }
+        
+        async function comparePrices() {
+            const commodity = document.getElementById('commoditySelect').value;
+            if (!commodity) return;
+            
+            const response = await fetch(`/api/prices?commodity=${commodity}`);
+            const data = await response.json();
+            
+            if (data.data.length === 0) {
+                alert('No data found for this commodity');
+                return;
+            }
+            
+            const prices = data.data.sort((a, b) => a.price - b.price);
+            const minPrice = prices[0].price;
+            const maxPrice = prices[prices.length - 1].price;
+            
+            const tbody = document.querySelector('#comparisonTable tbody');
+            tbody.innerHTML = prices.map(p => `
+                <tr class="${p.price === minPrice ? 'cheapest' : p.price === maxPrice ? 'expensive' : ''}">
+                    <td>${p.city}</td>
+                    <td>Rs. ${p.price}</td>
+                    <td>${p.price === minPrice ? '✅ Cheapest' : p.price === maxPrice ? '❌ Most Expensive' : ''}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('comparisonTable').style.display = 'table';
+        }
+        
+        loadCommodities();
+    </script>
+</body>
+</html>

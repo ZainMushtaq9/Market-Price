@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Get real-time market prices for fruits, vegetables, grains, and commodities across Pakistan. Check rates in Multan, Lahore, Karachi, and other cities.">
+    <meta name="keywords" content="market price, Pakistan market rates, mandi prices, fruit prices, vegetable rates, commodity prices, aaj ka rate">
+    <title>Pakistan Market Prices - Aaj Ka Rate | Real-Time Mandi Rates</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        nav {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: #667eea;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        nav a:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        
+        .content-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+        
+        h3 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .card h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .price-table th,
+        .price-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .price-table th {
+            background: #667eea;
+            color: white;
+        }
+        
+        .price-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .chatbot-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .chatbot-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .chatbot-button:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+        
+        .last-updated {
+            color: #666;
+            font-style: italic;
+            margin-top: 20px;
+        }
+        
+        footer {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            nav {
+                flex-direction: column;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Pakistan Market Prices</h1>
+            <p class="tagline">Aaj Ka Rate - Real-time market prices across Pakistan</p>
+        </header>
+        
+        <nav>
+            <a href="/">Home</a>
+            <a href="/category.html">Categories</a>
+            <a href="/city.html">Cities</a>
+            <a href="/comparison.html">Compare Prices</a>
+            <a href="/chatbot.html">Ask Chatbot</a>
+            <a href="/voice.html">Voice Search</a>
+            <a href="/about.html">About</a>
+        </nav>
+        
+        <div class="content-section">
+            <h2>Welcome to Pakistan's Most Comprehensive Market Price Platform</h2>
+            
+            <p>Finding accurate and up-to-date market prices in Pakistan has never been easier. Our platform provides real-time rates for vegetables, fruits, grains, and other commodities across major cities including Multan, Lahore, Karachi, Islamabad, Faisalabad, and many more.</p>
+            
+            <p>Whether you're a farmer looking to get the best price for your produce, a trader planning your purchases, or a consumer wanting to know today's market rates, we have you covered. Our system automatically collects price data from reliable sources and presents it in an easy-to-understand format.</p>
+            
+            <h3>Why Choose Our Platform?</h3>
+            
+            <div class="grid">
+                <div class="card">
+                    <h4>🔄 Real-Time Updates</h4>
+                    <p>Prices are updated multiple times daily from verified mandi sources across Pakistan.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>🌍 Nationwide Coverage</h4>
+                    <p>Track prices from Karachi to Peshawar, covering all major agricultural markets.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>🤖 Smart Chatbot</h4>
+                    <p>Ask questions in English, Urdu, Roman Urdu, Punjabi, or Saraiki and get instant answers.</p>
+                </div>
+                
+                <div class="card">
+                    <h4>🎤 Voice Support</h4>
+                    <p>Use voice commands to search for prices - perfect for users on the go.</p>
+                </div>
+            </div>
+            
+            <h3>Popular Commodities</h3>
+            
+            <p>Our platform tracks hundreds of commodities across multiple categories. Here are some of the most searched items:</p>
+            
+            <ul>
+                <li><strong>Vegetables:</strong> Potato (Aloo), Onion (Pyaz), Tomato (Tamatar), Chilli (Mirch), Garlic (Lehsan)</li>
+                <li><strong>Grains:</strong> Rice (Chawal), Wheat (Gandum), Maize (Makai)</li>
+                <li><strong>Fruits:</strong> Apple (Seb), Banana (Kela), Mango (Aam), Grapes (Angoor)</li>
+                <li><strong>Crops:</strong> Cotton, Sugarcane, and other agricultural products</li>
+            </ul>
+            
+            <h3>Latest Price Updates</h3>
+            
+            <table class="price-table" id="latestPrices">
+                <thead>
+                    <tr>
+                        <th>Commodity</th>
+                        <th>City</th>
+                        <th>Price (per 40kg)</th>
+                        <th>Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" style="text-align: center;">Loading latest prices...</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p class="last-updated" id="lastUpdated">Last updated: Loading...</p>
+        </div>
+        
+        <div class="content-section">
+            <h2>How to Use This Platform</h2>
+            
+            <p>Our platform is designed to be simple and accessible for everyone, regardless of education level or technical expertise. Here's how you can get the most out of it:</p>
+            
+            <h3>1. Browse by Category</h3>
+            <p>Visit our <a href="/category.html">Categories page</a> to explore prices organized by commodity type. Whether you're looking for vegetables, fruits, grains, or other products, you can easily find what you need.</p>
+            
+            <h3>2. Search by City</h3>
+            <p>Check out the <a href="/city.html">Cities page</a> to see prices specific to your location. We cover major cities and mandis across Pakistan, from Karachi to Peshawar.</p>
+            
+            <h3>3. Compare Prices</h3>
+            <p>Use our <a href="/comparison.html">Comparison tool</a> to see which mandi offers the best rates for your desired commodity. Make informed decisions and save money.</p>
+            
+            <h3>4. Ask Our Chatbot</h3>
+            <p>Simply type or speak your question in any language. For example:</p>
+            <ul>
+                <li>"allo ka rate kia ha" (What is the potato rate?)</li>
+                <li>"multan main chawal ki qeemat" (Rice price in Multan)</li>
+                <li>"kon si mandi sasti ha" (Which mandi is cheapest?)</li>
+            </ul>
+            
+            <h3>5. Use Voice Search</h3>
+            <p>On the go? Use our <a href="/voice.html">Voice Search</a> feature to get instant price information without typing.</p>
+        </div>
+        
+        <div class="content-section">
+            <h2>Understanding Market Prices in Pakistan</h2>
+            
+            <p>Agricultural market prices in Pakistan are influenced by various factors including seasonal availability, transportation costs, supply and demand dynamics, and regional variations. Our platform helps you navigate these complexities by providing transparent, real-time data.</p>
+            
+            <h3>Price Variations Across Cities</h3>
+            
+            <p>It's normal to see price differences between cities. For example, vegetables grown in Punjab may be cheaper in Lahore or Faisalabad compared to Karachi due to transportation costs. Our comparison tools help you understand these variations.</p>
+            
+            <h3>Seasonal Factors</h3>
+            
+            <p>Many commodities have peak seasons when prices are lower due to abundant supply. Understanding these patterns can help you make better purchasing decisions. Our historical data shows trends over time.</p>
+            
+            <h3>Daily Price Changes</h3>
+            
+            <p>Market prices can change daily based on fresh arrivals at mandis, weather conditions, and demand fluctuations. We update our data multiple times per day to ensure accuracy.</p>
+        </div>
+        
+        <footer>
+            <p><strong>Pakistan Market Prices - Aaj Ka Rate</strong></p>
+            <p>Providing accurate, real-time market information for everyone</p>
+            <p style="margin-top: 15px;">
+                <a href="/about.html">About Us</a> | 
+                <a href="/contact.html">Contact</a> | 
+                <a href="/privacy.html">Privacy Policy</a> | 
+                <a href="/disclaimer.html">Disclaimer</a>
+            </p>
+            <p style="margin-top: 10px; color: #666;">© 2024 Market-Price. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <div class="chatbot-widget">
+        <button class="chatbot-button" onclick="window.location.href='/chatbot.html'">
+            💬 Ask Me Anything
+        </button>
+    </div>
+    
+    <script>
+        // Load latest prices
+        async function loadLatestPrices() {
+            try {
+                const response = await fetch('/api/prices?hours=24');
+                const data = await response.json();
+                
+                if (data.success && data.data.length > 0) {
+                    const tbody = document.querySelector('#latestPrices tbody');
+                    tbody.innerHTML = '';
+                    
+                    // Show first 10 prices
+                    const prices = data.data.slice(0, 10);
+                    
+                    prices.forEach(price => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${price.commodity}</td>
+                            <td>${price.city}</td>
+                            <td>Rs. ${price.price}</td>
+                            <td>${price.price_yesterday ? 
+                                (price.price > price.price_yesterday ? '📈 +' : '📉 ') + 
+                                Math.abs(price.price - price.price_yesterday).toFixed(2) : 
+                                '-'}</td>
+                        `;
+                    });
+                    
+                    // Update last updated time
+                    const lastUpdated = new Date(prices[0].updated_at);
+                    document.getElementById('lastUpdated').textContent = 
+                        `Last updated: ${lastUpdated.toLocaleString()}`;
+                }
+            } catch (error) {
+                console.error('Error loading prices:', error);
+            }
+        }
+        
+        // Load prices on page load
+        loadLatestPrices();
+        
+        // Refresh prices every 5 minutes
+        setInterval(loadLatestPrices, 300000);
+    </script>
+</body>
+</html>

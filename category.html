@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse market prices by category - vegetables, fruits, grains, and crops across Pakistan. Find the best rates for your commodities.">
+    <title>Browse by Category - Pakistan Market Prices</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 { color: #667eea; font-size: 2.5em; margin-bottom: 10px; }
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .category-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .category-card:hover { transform: translateY(-10px); }
+        .category-icon { font-size: 3em; margin-bottom: 15px; }
+        h2 { color: #667eea; margin-bottom: 15px; }
+        .price-list { list-style: none; padding: 0; }
+        .price-list li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        .back-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Home</a>
+        
+        <header>
+            <h1>🗂️ Browse by Category</h1>
+            <p>Explore market prices organized by commodity type</p>
+        </header>
+        
+        <div class="category-grid" id="categoryGrid">
+            <div class="category-card">
+                <div class="category-icon">🥔</div>
+                <h2>Vegetables</h2>
+                <p>Potato, Onion, Tomato, Chilli, Garlic, and more</p>
+                <ul class="price-list" id="vegetables">
+                    <li>Loading...</li>
+                </ul>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🍎</div>
+                <h2>Fruits</h2>
+                <p>Apple, Banana, Mango, Grapes, Orange, and more</p>
+                <ul class="price-list" id="fruits">
+                    <li>Loading...</li>
+                </ul>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🌾</div>
+                <h2>Grains</h2>
+                <p>Rice, Wheat, Maize, and other cereal crops</p>
+                <ul class="price-list" id="grains">
+                    <li>Loading...</li>
+                </ul>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">🌱</div>
+                <h2>Crops</h2>
+                <p>Cotton, Sugarcane, and other agricultural products</p>
+                <ul class="price-list" id="crops">
+                    <li>Loading...</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function loadCategoryData() {
+            try {
+                const response = await fetch('/api/prices?hours=24');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const categories = {
+                        vegetables: [],
+                        fruits: [],
+                        grains: [],
+                        crops: []
+                    };
+                    
+                    data.data.forEach(item => {
+                        const cat = item.category ? item.category.toLowerCase() : 'other';
+                        if (cat.includes('vegetable')) {
+                            categories.vegetables.push(item);
+                        } else if (cat.includes('fruit')) {
+                            categories.fruits.push(item);
+                        } else if (cat.includes('grain')) {
+                            categories.grains.push(item);
+                        } else if (cat.includes('crop')) {
+                            categories.crops.push(item);
+                        }
+                    });
+                    
+                    for (const [category, items] of Object.entries(categories)) {
+                        const list = document.getElementById(category);
+                        list.innerHTML = items.slice(0, 5).map(item => 
+                            `<li><span>${item.commodity}</span><span>Rs.${item.price}</span></li>`
+                        ).join('') || '<li>No data available</li>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+        
+        loadCategoryData();
+    </script>
+</body>
+</html>

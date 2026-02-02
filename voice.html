@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Use voice commands to search market prices in Pakistan. Speak in Urdu, Punjabi, or English to get instant price information.">
+    <title>Voice Search - Market Prices Pakistan</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .voice-container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .mic-button {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .mic-button.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+        
+        .mic-icon {
+            font-size: 60px;
+        }
+        
+        .status {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+        
+        .transcript {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            min-height: 60px;
+            color: #333;
+        }
+        
+        .response {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+        
+        .response.active {
+            display: block;
+        }
+        
+        .speaker-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 5px 0;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .error {
+            color: #f5576c;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="voice-container">
+        <a href="/" class="back-link">← Back to Home</a>
+        
+        <h1>🎤 Voice Search</h1>
+        <p class="subtitle">Speak to search market prices</p>
+        
+        <button class="mic-button" id="micButton" onclick="toggleListening()">
+            <span class="mic-icon">🎤</span>
+        </button>
+        
+        <div class="status" id="status">Click the mic to start</div>
+        
+        <div class="transcript" id="transcript">
+            Your voice input will appear here...
+        </div>
+        
+        <div class="response" id="response">
+            <h3>📊 Response:</h3>
+            <p id="responseText"></p>
+            <button class="speaker-button" onclick="speak()" id="speakButton">🔊 Listen to Response</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>💡 How to Use:</h3>
+            <ul>
+                <li>Click the microphone button</li>
+                <li>Speak your question clearly</li>
+                <li>You can speak in Urdu, Punjabi, or English</li>
+                <li>Get instant price information</li>
+            </ul>
+            
+            <h3 style="margin-top: 20px;">🗣️ Example Queries:</h3>
+            <ul>
+                <li>"آلو کی قیمت کیا ہے" (What is potato price)</li>
+                <li>"Multan mein chawal ka rate"</li>
+                <li>"Cheapest onion price"</li>
+                <li>"Compare prices in Lahore and Karachi"</li>
+            </ul>
+        </div>
+        
+        <p class="error" id="error"></p>
+    </div>
+    
+    <script>
+        let isListening = false;
+        let recognition;
+        let currentResponse = '';
+        
+        // Check browser support
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US'; // Default, will auto-detect
+            
+            recognition.onstart = function() {
+                document.getElementById('status').textContent = '🎤 Listening... Speak now!';
+                document.getElementById('micButton').classList.add('listening');
+            };
+            
+            recognition.onresult = async function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('transcript').textContent = transcript;
+                
+                // Send to chatbot API
+                await processQuery(transcript);
+            };
+            
+            recognition.onerror = function(event) {
+                document.getElementById('error').textContent = 'Error: ' + event.error;
+                stopListening();
+            };
+            
+            recognition.onend = function() {
+                stopListening();
+            };
+        } else {
+            document.getElementById('error').textContent = 
+                'Voice recognition not supported in your browser. Please use Chrome, Edge, or Safari.';
+            document.getElementById('micButton').disabled = true;
+        }
+        
+        function toggleListening() {
+            if (isListening) {
+                stopListening();
+            } else {
+                startListening();
+            }
+        }
+        
+        function startListening() {
+            if (recognition) {
+                document.getElementById('error').textContent = '';
+                document.getElementById('response').classList.remove('active');
+                recognition.start();
+                isListening = true;
+            }
+        }
+        
+        function stopListening() {
+            if (recognition) {
+                recognition.stop();
+                isListening = false;
+                document.getElementById('status').textContent = 'Click the mic to start';
+                document.getElementById('micButton').classList.remove('listening');
+            }
+        }
+        
+        async function processQuery(query) {
+            document.getElementById('status').textContent = '🔍 Processing...';
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: query })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentResponse = data.response;
+                    document.getElementById('responseText').textContent = data.response;
+                    document.getElementById('response').classList.add('active');
+                    document.getElementById('status').textContent = '✅ Done!';
+                    
+                    // Auto-speak response
+                    setTimeout(() => speak(), 500);
+                } else {
+                    document.getElementById('error').textContent = 'Could not process query';
+                    document.getElementById('status').textContent = 'Error occurred';
+                }
+            } catch (error) {
+                document.getElementById('error').textContent = 'Connection error';
+                document.getElementById('status').textContent = 'Error occurred';
+                console.error('Error:', error);
+            }
+        }
+        
+        function speak() {
+            if ('speechSynthesis' in window && currentResponse) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(currentResponse);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                // Try to use Urdu voice if available
+                const voices = window.speechSynthesis.getVoices();
+                const urduVoice = voices.find(voice => voice.lang.includes('ur') || voice.lang.includes('pk'));
+                if (urduVoice) {
+                    utterance.voice = urduVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // Load voices (needed for some browsers)
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = function() {
+                window.speechSynthesis.getVoices();
+            };
+        }
+    </script>
+</body>
+</html>
